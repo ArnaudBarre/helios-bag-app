@@ -1,53 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import React, {Component} from 'react';
+import {View, ViewPagerAndroid, StatusBar, AppRegistry,} from 'react-native';
+import Item from './app/components/Item';
+import Battery from './app/components/Battery';
+import Objects from './app/components/Objects';
+import Activity from './app/components/Activity';
 
 class HeliosBag extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <View style={{flex: 1}}>
+                <StatusBar backgroundColor={'green'}/>
+                <View style={{flexDirection: 'row', backgroundColor: 'forestgreen'}}>
+                    <Item name='Battery' source={require('./app/icons/battery.png')}
+                          onPress={() => this.viewPager.setPage(0)}/>
+                    <Item name='Objects' source={require('./app/icons/objects.png')}
+                          onPress={() => this.viewPager.setPage(1)}/>
+                    <Item name='Activity' source={require('./app/icons/activity.png')}
+                          onPress={() => this.viewPager.setPage(2)}/>
+                </View>
+                <ViewPagerAndroid style={{flex: 1}} initialPage={0} ref={viewPager => {this.viewPager = viewPager;}}>
+                    <View>
+                        <Battery/>
+                    </View>
+                    <View>
+                        <Objects/>
+                    </View>
+                    <View>
+                        <Activity/>
+                    </View>
+                </ViewPagerAndroid>
+            </View>
+        );
+    }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('HeliosBag', () => HeliosBag);
