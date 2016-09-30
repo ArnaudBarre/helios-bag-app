@@ -7,8 +7,8 @@ export default class Activity extends Component {
         super();
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            inActivity: false, historyVisible: false, start: 0, time: '00:00', distance: 0.00,
-            data: [], dataSource: ds.cloneWithRows([]),
+            inActivity: false, historyVisible: false, start: 0, time: '00:00', distance: 0,
+            data: [], dataSource: ds.cloneWithRows([]), positions: [],
         }
     }
 
@@ -20,9 +20,27 @@ export default class Activity extends Component {
         this.setState({historyVisible: visible});
     }
 
+    computeDistance(pos) {
+        let positions = JSON.parse(JSON.stringify(this.state.positions));
+        let delta = 0;
+        if (positions.length) {
+            var lastPos = positions[positions.length - 1];
+            var a = Math.pow(Math.sin((pos.coords.latitude - lastPos.coords.latitude) * Math.PI / 180 / 2), 2) +
+                Math.cos(lastPos.coords.latitude * Math.PI / 180) * Math.cos(pos.coords.latitude * Math.PI / 180) *
+                Math.pow(Math.sin((pos.coords.longitude - lastPos.coords.longitude) * Math.PI / 180 / 2), 2);
+            delta = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+        positions.push(pos);
+        this.setState({positions: positions, distance: this.state.distance + delta});
+    }
+
+
     startActivity() {
         var interval = setInterval(() => this.setState({time: this.displayTime()}), 1000);
         this.setState({inActivity: true, start: new Date().getTime(), interval: interval});
+        this.watchID = navigator.geolocation.watchPosition(position => this.computeDistance(position),
+            (error) => alert(JSON.stringify(error)),
+            {timeout: 20000, maximumAge: 0, enableHighAccuracy: false, distanceFilter: 1});
     }
 
     stopActivity() {
@@ -30,13 +48,13 @@ export default class Activity extends Component {
         var newData = JSON.parse(JSON.stringify(this.state.data));
         newData.unshift({
             time: this.state.time,
-            distance: this.state.distance,
+            distance: this.state.distance.toFixed(2),
             date: new Date(this.state.start).toLocaleString(),
             average: (this.state.distance / ((new Date().getTime() - this.state.start) / 3600000)).toFixed(1),
             pressed: false,
         });
         this.setData(newData);
-        this.setState({inActivity: false, time: '00:00', distance: 0.00});
+        this.setState({inActivity: false, time: '00:00', distance: 0});
     }
 
     displayTime() {
@@ -57,8 +75,9 @@ export default class Activity extends Component {
                         <Image source={require('./../icons/stop.png')} style={styles.icon}/>
                     </TouchableOpacity>
                     <Text style={styles.name}>Stop the activity</Text>
-                    <Text style={[styles.name, styles.nameCentral]}>Time: {this.state.time}</Text>
-                    <Text style={styles.name}>Distance: {this.state.distance}</Text>
+                    <Text style={styles.name}>Time: {this.state.time}</Text>
+                    <Text style={styles.name}>Distance: {this.state.distance.toFixed(2)}</Text>
+                    <Text>{JSON.stringify(this.state.positions)}</Text>
                 </View>
             );
         else
