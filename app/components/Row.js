@@ -33,7 +33,7 @@ export default class Row extends Component {
                 <TouchableHighlight underlayColor='darkgray'
                                     onPress={this.props.rowPress}
                                     onLongPress={this.props.rowLongPress}
-                                    style={{flex: 1, borderRadius: this.props.borderRounded ? 10 : null}}>
+                                    style={{height: 50, flex: 1, borderRadius: this.props.borderRounded ? 10 : null}}>
                     {this.renderContent()}
                 </TouchableHighlight>
             );
