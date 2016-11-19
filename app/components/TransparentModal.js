@@ -7,10 +7,10 @@ export default class TransparentModal extends Component {
             <Modal animationType={"slide"}
                    transparent={true}
                    visible={this.props.visible}
-                   onRequestClose={() => {this.props.setVisible(false)}}>
+                   onRequestClose={() => this.props.setVisible(false)}>
                 <TouchableHighlight underlayColor='transparent'
                                     style={styles.container}
-                                    onPress={() => {this.props.setVisible(false)}}>
+                                    onPress={() => this.props.setVisible(false)}>
                     <View style={styles.innerContainer}>
                         <TouchableWithoutFeedback onPress={null}>
                             <View>

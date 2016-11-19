@@ -21,7 +21,7 @@ export default class Options extends Component {
                      }}/>
                 <Row text='Cancel'
                      borderRounded={true}
-                     rowPress={() => {this.props.setOptionsVisible(false)}}/>
+                     rowPress={() => this.props.setOptionsVisible(false)}/>
             </TransparentModal>
         )
     }

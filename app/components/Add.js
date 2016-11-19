@@ -8,17 +8,17 @@ export default class Add extends Component {
     constructor() {
         super();
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        var data = [];
+        let data = [];
         for (let i = 0; i < 6; i++)
             data.push({name: '', number: Math.floor(Math.random() * 100000), stared: false});
         this.state = {data: data, dataSource: ds.cloneWithRows(data),}
     }
 
     iconPressed(rowData, rowID) {
-        var newData = JSON.parse(JSON.stringify(this.props.data));
+        let newData = JSON.parse(JSON.stringify(this.props.data));
         newData.push(rowData);
         this.props.setData(newData);
-        var availableChips = JSON.parse(JSON.stringify(this.state.data));
+        let availableChips = JSON.parse(JSON.stringify(this.state.data));
         availableChips.splice(rowID, 1);
         this.setState({data: availableChips, dataSource: this.state.dataSource.cloneWithRows(availableChips)})
     }
@@ -34,7 +34,7 @@ export default class Add extends Component {
     render() {
         return (
             <FullModal visible={this.props.visible}
-                       onClose={() => this.props.setAddVisible(false)}
+                       onClose={() => this.props.setVisible(false)}
                        name="Chips available">
                 <ListView dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ListView, TouchableHighlight, StyleSheet, Text, View,} from 'react-native';
+import {ListView, TouchableHighlight, StyleSheet, Text, View, Button, AsyncStorage,} from 'react-native';
 import Row from './Row';
 import Separator from './Separator';
 import Options from './Options';
@@ -24,8 +24,13 @@ export default class Objects extends Component {
         }
     }
 
+    componentDidMount() {
+        AsyncStorage.getItem('objects').then(obj => {if (obj) this.setData(JSON.parse(obj))})
+    }
+
     setData(newData) {
         this.setState({data: newData, dataSource: this.state.dataSource.cloneWithRows(newData)});
+        AsyncStorage.setItem('objects', JSON.stringify(newData))
     }
 
     setInput(input) {this.setState({input: input})}
@@ -39,35 +44,26 @@ export default class Objects extends Component {
     setRemoveVisible(visible) {this.setState({removeVisible: visible})}
 
     rename() {
-        var newData = JSON.parse(JSON.stringify(this.state.data));
+        let newData = JSON.parse(JSON.stringify(this.state.data));
         newData[this.state.rowID].name = this.state.input;
-        this.setState({
-            data: newData,
-            dataSource: this.state.dataSource.cloneWithRows(newData)
-        });
+        this.setData(newData)
     }
 
     remove() {
-        var newData = JSON.parse(JSON.stringify(this.state.data));
+        let newData = JSON.parse(JSON.stringify(this.state.data));
         newData.splice(this.state.rowID, 1);
-        this.setState({
-            data: newData,
-            dataSource: this.state.dataSource.cloneWithRows(newData)
-        });
+        this.setData(newData)
     }
 
     iconPressed(rowID) {
-        var dataTemp = JSON.parse(JSON.stringify(this.state.data));
+        let dataTemp = JSON.parse(JSON.stringify(this.state.data));
         dataTemp[rowID].stared = !dataTemp[rowID].stared;
-        var newData = [];
+        let newData = [];
         for (let i in dataTemp) if (dataTemp[i].stared)
             newData.push(dataTemp[i]);
         for (let i in dataTemp) if (!dataTemp[i].stared)
             newData.push(dataTemp[i]);
-        this.setState({
-            data: newData,
-            dataSource: this.state.dataSource.cloneWithRows(newData)
-        });
+        this.setData(newData)
     }
 
     rowLongPressed(rowData, rowID) {
@@ -90,22 +86,20 @@ export default class Objects extends Component {
                           renderRow={this.renderRow.bind(this)}
                           enableEmptySections={true}
                           renderSeparator={Separator.render}/>
-                <TouchableHighlight onPress={() => this.setState({addVisible: true})}
-                                    style={styles.add}
-                                    underlayColor='green'>
-                    <Text style={{color: 'white'}}>Add</Text>
-                </TouchableHighlight>
+                <Button onPress={() => this.setState({addVisible: true})}
+                        color='green'
+                        title='Add'/>
                 <Options visible={this.state.optionsVisible}
                          setOptionsVisible={this.setOptionsVisible.bind(this)}
                          setRenameVisible={this.setRenameVisible.bind(this)}
                          setRemoveVisible={this.setRemoveVisible.bind(this)}
                          rowData={this.state.rowData}/>
                 <Add visible={this.state.addVisible}
-                     setAddVisible={this.setAddVisible.bind(this)}
+                     setVisible={this.setAddVisible.bind(this)}
                      data={this.state.data}
                      setData={this.setData.bind(this)}/>
                 <Rename visible={this.state.renameVisible}
-                        setRenameVisible={this.setRenameVisible.bind(this)}
+                        setVisible={this.setRenameVisible.bind(this)}
                         rename={this.rename.bind(this)}
                         setInput={this.setInput.bind(this)}
                         input={this.state.input}/>
