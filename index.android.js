@@ -3,6 +3,7 @@ import {View, ViewPagerAndroid, StatusBar, AppRegistry, Button} from 'react-nati
 import Item from './app/components/Item';
 import Battery from './app/components/Battery';
 import Objects from './app/components/Objects';
+import Ble from './app/components/BleExample';
 
 class HeliosBag extends Component {
     render() {
@@ -21,6 +22,9 @@ class HeliosBag extends Component {
                     </View>
                     <View>
                         <Objects/>
+                    </View>
+                    <View>
+                        <Ble/>
                     </View>
                 </ViewPagerAndroid>
             </View>
