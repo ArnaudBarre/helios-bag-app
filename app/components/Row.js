@@ -21,7 +21,7 @@ export default class Row extends Component {
                     {this.props.text}
                 </Text>
                 <TouchableOpacity onPress={this.props.iconPress}>
-                    <Image style={styles.icon} source={this.props.icon}/>
+                    <Image style={this.props.icon ? styles.icon : null} source={this.props.icon}/>
                 </TouchableOpacity>
             </View>
         );
@@ -33,7 +33,7 @@ export default class Row extends Component {
                 <TouchableHighlight underlayColor='darkgray'
                                     onPress={this.props.rowPress}
                                     onLongPress={this.props.rowLongPress}
-                                    style={{height: 50, flex: 1, borderRadius: this.props.borderRounded ? 10 : null}}>
+                                    style={{height: 50, flexGrow: 1, borderRadius: this.props.borderRounded ? 10 : null}}>
                     {this.renderContent()}
                 </TouchableHighlight>
             );

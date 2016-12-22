@@ -12,20 +12,22 @@ export default class BleExample extends Component {
     }
 
     componentDidMount() {
-        BleManager.enableBluetooth()
-            .then(() => this.log('The bluetooh is already enabled or the user confirm'))
-            .catch(error => this.log('The user refuse to enable bluetooth' + error));
-        BleManager.start({showAlert: false});
+        BleManager.start({showAlert: false}).then(() => this.log('Module initialized'));
         this.endScan = this.endScan.bind(this);
         NativeAppEventEmitter.addListener('BleManagerStopScan', this.endScan);
-        if (Platform.OS === 'android' && Platform.Version >= 23)
-            PermissionsAndroid.checkPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then(result => {
-                if (result) this.log("Permission is OK");
-                else PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then(result => {
-                    if (result) this.log("User accept");
-                    else this.log("User refuse");
+        if (Platform.OS === 'android') {
+            BleManager.enableBluetooth()
+                .then(() => this.log('The bluetooh is already enabled or the user confirm'))
+                .catch(error => this.log('The user refuse to enable bluetooth' + error));
+            if (Platform.Version >= 23)
+                PermissionsAndroid.checkPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then(result => {
+                    if (result) this.log("Permission is OK");
+                    else PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then(result => {
+                        if (result) this.log("User accept");
+                        else this.log("User refuse");
+                    });
                 });
-            });
+        }
     }
 
     renderRow(rowData, sectionID, rowID) {

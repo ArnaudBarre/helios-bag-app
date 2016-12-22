@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ListView, TouchableHighlight, StyleSheet, Text, View, Button, AsyncStorage,} from 'react-native';
+import {ListView, View, Button, AsyncStorage,} from 'react-native';
 import Row from './Row';
 import Separator from './Separator';
 import Options from './Options';
@@ -82,13 +82,14 @@ export default class Objects extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                <Button onPress={() => this.setState({addVisible: true})}
+                        color='green'
+                        title='Add'/>
+                <View style={{height:1, backgroundColor:'#CCCCCC'}}/>
                 <ListView dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
                           enableEmptySections={true}
                           renderSeparator={Separator.render}/>
-                <Button onPress={() => this.setState({addVisible: true})}
-                        color='green'
-                        title='Add'/>
                 <Options visible={this.state.optionsVisible}
                          setOptionsVisible={this.setOptionsVisible.bind(this)}
                          setRenameVisible={this.setRenameVisible.bind(this)}
@@ -110,7 +111,3 @@ export default class Objects extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    add: {height: 50, backgroundColor: 'forestgreen', alignItems: 'center', justifyContent: 'center'},
-});
