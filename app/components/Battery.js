@@ -1,22 +1,29 @@
-import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {Component} from "react";
+import {Image, StyleSheet, Text, View} from "react-native";
 
 export default class Battery extends Component {
     render() {
-        return (
-            <View style={styles.page}>
-                <View style={styles.container}>
-                    <Image source={require('./../icons/battery-2.png')} style={styles.icon}/>
-                    <Text style={styles.value}>56%</Text>
-                    <Text style={styles.description}>Battery full in 2h30</Text>
+        if (this.props.connected)
+            return (
+                <View style={styles.page}>
+                    <View style={styles.container}>
+                        <Image source={require('./../icons/battery-2.png')} style={styles.icon}/>
+                        <Text style={styles.value}>56%</Text>
+                        <Text style={styles.description}>Battery full in 2h30</Text>
+                    </View>
+                    <View style={styles.container}>
+                        <Image source={require('./../icons/sun.png')} style={styles.icon}/>
+                        <Text style={styles.value}>45W</Text>
+                        <Text style={styles.description}>80% of maximal capabilities</Text>
+                    </View>
                 </View>
+            );
+        else
+            return (
                 <View style={styles.container}>
-                    <Image source={require('./../icons/sun.png')} style={styles.icon}/>
-                    <Text style={styles.value}>45W</Text>
-                    <Text style={styles.description}>80% of maximal capabilities</Text>
+                    <Text>No bag connected</Text>
                 </View>
-            </View>
-        );
+            );
     }
 }
 
